@@ -1,6 +1,21 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<City>
+@{
+    ViewData["Title"] = "Miasta";
 }
+
+<table>
+ <thead>
+  <th>Nazwa</th><th>Kraj</th><th>Populacja</th>
+ </thead>
+ <tbody>
+   @foreach (var c in Model)
+   {
+    <tr>
+     <td>@c.Name</td><td>@c.Country</td><td>@c.Population</td>
+    </tr>
+   }
+ </tbody> 
+</table>
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>

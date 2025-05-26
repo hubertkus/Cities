@@ -1,0 +1,24 @@
+@model City
+
+<h2>Dodaj miasto</h2>
+
+<form asp-action="Create" method="post">
+
+ <div>
+  <label>Nazwa</label>
+  <input asp-for="Name"/>
+ </div>
+
+ <div>
+  <label>Państwo</label>
+  <input asp-for="Country"/>
+ </div>
+
+ <div>
+  <label>Populacja</label>
+  <input asp-for="Population"/>
+ </div>
+
+ <button type="submit">Dodaj</button>
+ 
+</form>

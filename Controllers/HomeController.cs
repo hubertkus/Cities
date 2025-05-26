@@ -6,18 +6,22 @@ namespace Cities.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private ICityRepository _repository;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ICityRepository repository)
     {
-        _logger = logger;
+        _repository = repository;
     }
 
-    public IActionResult Index()
-    {
-        return View();
-    }
+    public ViewResult Index() => View(_repository.Cities);
 
+    public ViewResult Create() => View();
+
+    [HttpPost]
+    public void Create(City city)
+    {
+     _repository.AddCity(city);
+    }
     public IActionResult Privacy()
     {
         return View();
