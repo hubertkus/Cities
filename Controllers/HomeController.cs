@@ -21,7 +21,7 @@ public class HomeController : Controller
     public IActionResult Create(City city)
     {
         _repository.AddCity(city);
-        return RedirectToAction("Home", "Index");
+        return RedirectToAction("Index", "Home");
     }
 
     public IActionResult Privacy()
