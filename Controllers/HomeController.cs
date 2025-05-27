@@ -18,10 +18,12 @@ public class HomeController : Controller
     public ViewResult Create() => View();
 
     [HttpPost]
-    public void Create(City city)
+    public IActionResult Create(City city)
     {
-     _repository.AddCity(city);
+        _repository.AddCity(city);
+        return RedirectToAction("Home", "Index");
     }
+
     public IActionResult Privacy()
     {
         return View();

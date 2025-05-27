@@ -2,7 +2,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<ICityRepository,MemoryCityRepository>();
+builder.Services.AddSingleton<ICityRepository, MemoryCityRepository>();
 
 var app = builder.Build();
 
