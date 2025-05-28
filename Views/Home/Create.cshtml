@@ -4,21 +4,21 @@
 
 <form asp-action="Create" method="post">
 
- <div>
-  <label>Nazwa</label>
-  <input asp-for="Name"/>
+ <div class="mb-3">
+  <label class="form-label">Nazwa</label>
+  <input asp-for="Name" class="form-control"/>
  </div>
 
- <div>
-  <label>Państwo</label>
-  <input asp-for="Country"/>
+ <div class="mb-3">
+  <label class="form-label">Państwo</label>
+  <input asp-for="Country" class="form-control"/>
  </div>
 
- <div>
-  <label>Populacja</label>
-  <input asp-for="Population"/>
+ <div class="mb-3">
+  <label class="form-label">Populacja</label>
+  <input asp-for="Population" class="form-control"/>
  </div>
 
- <button type="submit">Dodaj</button>
+ <button type="submit" class="btn btn-primary">Dodaj</button>
  
 </form>

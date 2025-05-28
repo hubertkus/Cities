@@ -3,15 +3,23 @@
     ViewData["Title"] = "Miasta";
 }
 
-<table>
- <thead>
-  <th>Nazwa</th><th>Kraj</th><th>Populacja</th>
+<h2>Lista miast</h2>
+
+<table class="table table-striped table-bordered table-hover">
+ <thead class="table-dark">
+  <tr>
+   <th>Nazwa</th>
+   <th>Kraj</th>
+   <th>Populacja</th>
+  </tr>
  </thead>
  <tbody>
    @foreach (var c in Model)
    {
     <tr>
-     <td>@c.Name</td><td>@c.Country</td><td>@c.Population</td>
+     <td>@c.Name</td>
+     <td>@c.Country</td>
+     <td>@c.Population</td>
     </tr>
    }
  </tbody> 
