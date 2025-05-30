@@ -7,18 +7,28 @@ namespace Cities.Controllers.Api
 
     [ApiController]
     [Route("api/[Controller]")]
-    public class CityController : ControllerBase
+    public class CityApiController : ControllerBase
     {
 
         private ICityRepository _repository;
-        public CityController(ICityRepository repository) => _repository = repository;
+        public CityApiController(ICityRepository repository) => _repository = repository;
 
         [HttpGet("{city}")]
         public IActionResult GetCity(string city)
         {
-            var _city = _repository.Cities.FirstOrDefault(c => c.Name == city)?.Name;
-            var message = $"Twoje miasto to: {_city ?? "brak miasta"}";
-            return Ok(message);
+            if (string.IsNullOrWhiteSpace(city))
+            {
+                return BadRequest("Nazwa miasta nie może być pusta");
+            }
+            var _existingcity = _repository.Cities.FirstOrDefault(c => c.Name == city);
+            if (_existingcity == null)
+            {
+                return Conflict($"Miasto: {city} nie istnieje");
+            }
+            else
+            {
+                return Ok($"Twoje miasto to: {city}");
+            }
         }
         [HttpPost]
         public IActionResult PostCity([FromBody] City city)
