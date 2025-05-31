@@ -16,18 +16,18 @@ namespace Cities.Controllers.Api
         [HttpGet("{city}")]
         public IActionResult GetCity(string city)
         {
-            if (string.IsNullOrWhiteSpace(city))
+            int ifCityExistInRepo = IfCityExistInRepo(city);
+
+            switch (ifCityExistInRepo)
             {
-                return BadRequest("Nazwa miasta nie może być pusta");
-            }
-            var _existingcity = _repository.Cities.FirstOrDefault(c => c.Name == city);
-            if (_existingcity == null)
-            {
-                return Conflict($"Miasto: {city} nie istnieje");
-            }
-            else
-            {
-                return Ok($"Twoje miasto to: {city}");
+                case 1:
+                    return BadRequest("Nazwa miasta nie może być pusta");
+                case 2:
+                    return Conflict($"Miasto: {city} nie istnieje");
+                case 3:
+                    return Ok($"Twoje miasto to: {city}");
+                default:
+                    return BadRequest("Zasób nie znaleziony");
             }
         }
         [HttpPost]
@@ -46,6 +46,22 @@ namespace Cities.Controllers.Api
             else
             {
                 return Conflict($"Miasto: {city.Name} już istnieje");
+            }
+        }
+        private int IfCityExistInRepo(string city)
+        {
+            if (string.IsNullOrWhiteSpace(city))
+            {
+                return 1;
+            }
+            var _existingcity = _repository.Cities.FirstOrDefault(c => c.Name == city);
+            if (_existingcity == null)
+            {
+                return 2;
+            }
+            else
+            {
+                return 3;
             }
         }
     }
