@@ -16,9 +16,9 @@ namespace Cities.Controllers.Api
         [HttpGet("{city}")]
         public IActionResult GetCity(string city)
         {
-            int ifCityExistInRepo = IfCityExistInRepo(city);
+            int result_IfCityExistInRepo = IfCityExistInRepo(city);
 
-            switch (ifCityExistInRepo)
+            switch (result_IfCityExistInRepo)
             {
                 case 1:
                     return BadRequest("Nazwa miasta nie może być pusta");

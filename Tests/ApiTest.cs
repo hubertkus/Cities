@@ -12,7 +12,7 @@ public class ApiTest
     {
         //Arrange
         var mockRepo = new Mock<ICityRepository>();
-        var city = new City { Name = "Rybna", Country = "Poland", Population = 800 };
+        var city = new City { Name = "", Country = "Poland", Population = 800 };
         CityApiController target = new CityApiController(mockRepo.Object);
 
         //Act
@@ -28,7 +28,7 @@ public class ApiTest
     {
         //Arrange
         var mockRepo = new Mock<ICityRepository>();
-        var city = new City { Name = "Rybna", Country = "Poland", Population = 800 };
+        var city = new City { Name = "Stalowa Wola", Country = "Poland", Population = 800 };
         CityApiController target = new CityApiController(mockRepo.Object);
 
         //Act
