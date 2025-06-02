@@ -7,11 +7,11 @@ namespace Cities.Controllers.Api
 
     [ApiController]
     [Route("api/[Controller]")]
-    public class CityController : ControllerBase
+    public class CityApiController : ControllerBase
     {
 
         private ICityRepository _repository;
-        public CityController(ICityRepository repository) => _repository = repository;
+        public CityApiController(ICityRepository repository) => _repository = repository;
 
         [HttpGet("{city}")]
         public IActionResult GetCity(string city)
