@@ -13,8 +13,8 @@ namespace Cities.Controllers.Api
         private ICityRepository _repository;
         public CityApiController(ICityRepository repository) => _repository = repository;
 
-        [HttpGet("{city}")]
-        public IActionResult GetCity(string city)
+        [HttpGet("{city?}")]
+        public IActionResult GetCity(string? city)
         {
             int result_IfCityExistInRepo = IfCityExistInRepo(city);
 
@@ -48,7 +48,7 @@ namespace Cities.Controllers.Api
                 return Conflict($"Miasto: {city.Name} już istnieje");
             }
         }
-        private int IfCityExistInRepo(string city)
+        private int IfCityExistInRepo(string? city)
         {
             if (string.IsNullOrWhiteSpace(city))
             {
