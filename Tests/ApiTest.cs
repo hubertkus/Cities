@@ -66,18 +66,52 @@ public class ApiTest
     public void PostCity_ShouldReturnBadRequestResult_IfCityIsEmpty()
     {
         //Arrange
+        var cityStorage = new List<City>(); // "symulowana baza danych"
         Mock<ICityRepository> mock = new Mock<ICityRepository> ();
+
+        mock.Setup(repo => repo.AddCity(It.IsAny<City>()))
+            .Callback<City>(c => cityStorage.Add(c));
+
+        mock.Setup(repo => repo.GetAllCities())
+            .Returns(() => cityStorage); // zwraca aktualną zawartość
+
         var city = new City () { Name = "", Country = "Poland", Population = 800 };
         var target = new CityApiController(mock.Object);
 
         //Act
         var result = target.PostCity(city);
-        var allCities=target.GetAllCities();
+        var allCities=mock.Object.GetAllCities();
         
         //Asset
         var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
         Assert.Equal(400, badRequestResult.StatusCode);
         Assert.Empty(allCities);
     }
+    [Fact]
+    public void PostCity_ShouldReturnConflictResult_IfCityExist()
+    {
+        //Arrange
+        var cityStorage = new List<City>(); // "symulowana baza danych"
+        Mock<ICityRepository> mock = new Mock<ICityRepository> ();
 
+        mock.Setup(repo => repo.AddCity(It.IsAny<City>()))
+            .Callback<City>(c => cityStorage.Add(c));
+
+        mock.Setup(repo => repo.GetAllCities())
+            .Returns(() => cityStorage); // zwraca aktualną zawartość
+
+        var cityOne = new City () { Name = "Stalowa Wola", Country = "Poland", Population = 800 };
+        var cityTwo = new City () { Name = "Stalowa Wola", Country = "Polska", Population = 500 };
+        var target = new CityApiController(mock.Object);
+
+        //Act
+        target.PostCity(cityOne);
+        var resultTwo = target.PostCity(cityTwo);
+        var allCities=mock.Object.GetAllCities();
+
+        //Asset
+        var conflictResult = Assert.IsType<ConflictObjectResult>(resultTwo);
+        Assert.Equal(409, conflictResult.StatusCode);
+        Assert.Single(allCities);
+    }
 }

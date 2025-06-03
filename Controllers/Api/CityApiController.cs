@@ -64,9 +64,5 @@ namespace Cities.Controllers.Api
                 return 3;
             }
         }
-        public IEnumerable<City> GetAllCities()
-        {
-            return _repository.Cities;
-        }
     }
 }

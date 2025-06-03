@@ -12,4 +12,8 @@ public class MemoryCityRepository : ICityRepository
     {
         _cityList.Add(city);
     }
+    public IEnumerable<City> GetAllCities()
+    {
+        return Cities;
+    }
 }
