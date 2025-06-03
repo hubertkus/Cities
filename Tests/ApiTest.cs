@@ -20,8 +20,8 @@ public class ApiTest
     {
         //Arrange
         var repo = _provider.GetRequiredService<ICityRepository>();        
-        City city = new City () { Name = "", Country = "Poland", Population = 800 };
-        CityApiController target = new CityApiController(repo);
+        var city = new City () { Name = "", Country = "Poland", Population = 800 };
+        var target = new CityApiController(repo);
 
         //Act
         var result = target.GetCity(city.Name);
@@ -36,8 +36,8 @@ public class ApiTest
     { 
         //Arrange
         var repo = _provider.GetRequiredService<ICityRepository>();        
-        City city = new City () { Name = "Stalowa Wola", Country = "Poland", Population = 800 };
-        CityApiController target = new CityApiController(repo);
+        var city = new City () { Name = "Stalowa Wola", Country = "Poland", Population = 800 };
+        var target = new CityApiController(repo);
 
         //Act
         var result = target.GetCity(city.Name);
@@ -52,8 +52,8 @@ public class ApiTest
     {
         //Arrange
         var repo = _provider.GetRequiredService<ICityRepository>();        
-        City city = new City () { Name = "Rybna", Country = "Poland", Population = 1000 };
-        CityApiController target = new CityApiController(repo);
+        var city = new City () { Name = "Rybna", Country = "Poland", Population = 1000 };
+        var target = new CityApiController(repo);
 
         //Act
         var result = target.GetCity(city.Name);
@@ -62,4 +62,22 @@ public class ApiTest
         var okResult = Assert.IsType<OkObjectResult>(result);
         Assert.Equal(200, okResult.StatusCode);
     }
+    [Fact]
+    public void PostCity_ShouldReturnBadRequestResult_IfCityIsEmpty()
+    {
+        //Arrange
+        Mock<ICityRepository> mock = new Mock<ICityRepository> ();
+        var city = new City () { Name = "", Country = "Poland", Population = 800 };
+        var target = new CityApiController(mock.Object);
+
+        //Act
+        var result = target.PostCity(city);
+        var allCities=target.GetAllCities();
+        
+        //Asset
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.Equal(400, badRequestResult.StatusCode);
+        Assert.Empty(allCities);
+    }
+
 }

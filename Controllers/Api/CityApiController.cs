@@ -33,19 +33,19 @@ namespace Cities.Controllers.Api
         [HttpPost]
         public IActionResult PostCity([FromBody] City city)
         {
-            if (string.IsNullOrWhiteSpace(city?.Name))
+            int result_IfCityExistInRepo = IfCityExistInRepo(city.Name);
+
+            switch (result_IfCityExistInRepo)
             {
-                return BadRequest("Nazwa miasta nie może być pusta");
-            }
-            var _existingcity = _repository.Cities.FirstOrDefault(c => c.Name == city.Name);
-            if (_existingcity == null)
-            {
-                _repository.AddCity(city);
-                return Ok($"Dodano miasto: {city.Name}");
-            }
-            else
-            {
-                return Conflict($"Miasto: {city.Name} już istnieje");
+                case 1:
+                    return BadRequest("Nazwa miasta nie może być pusta");
+                case 2:
+                    _repository.AddCity(city);
+                    return Ok($"Dodano miasto: {city.Name}");
+                case 3:
+                    return Conflict($"Miasto: {city.Name} już istnieje");
+                default:
+                    return BadRequest("Zasób nie znaleziony");
             }
         }
         private int IfCityExistInRepo(string? city)
@@ -63,6 +63,10 @@ namespace Cities.Controllers.Api
             {
                 return 3;
             }
+        }
+        public IEnumerable<City> GetAllCities()
+        {
+            return _repository.Cities;
         }
     }
 }
