@@ -19,8 +19,8 @@ public class ApiTest
     public void GetCity_ShouldReturnBadRequestResult_IfCityIsEmpty()
     {
         //Arrange
-        var repo = _provider.GetRequiredService<ICityRepository>();        
-        var city = new City () { Name = "", Country = "Poland", Population = 800 };
+        var repo = _provider.GetRequiredService<ICityRepository>();
+        var city = new City() { Name = "", Country = "Poland", Population = 800 };
         var target = new CityApiController(repo);
 
         //Act
@@ -33,10 +33,10 @@ public class ApiTest
 
     [Fact]
     public void GetCity_ShouldReturnConflictResult_IfCityNotExist()
-    { 
+    {
         //Arrange
-        var repo = _provider.GetRequiredService<ICityRepository>();        
-        var city = new City () { Name = "Stalowa Wola", Country = "Poland", Population = 800 };
+        var repo = _provider.GetRequiredService<ICityRepository>();
+        var city = new City() { Name = "Stalowa Wola", Country = "Poland", Population = 800 };
         var target = new CityApiController(repo);
 
         //Act
@@ -51,8 +51,8 @@ public class ApiTest
     public void GetCity_ShouldReturnOkResult_IfCityExist()
     {
         //Arrange
-        var repo = _provider.GetRequiredService<ICityRepository>();        
-        var city = new City () { Name = "Rybna", Country = "Poland", Population = 1000 };
+        var repo = _provider.GetRequiredService<ICityRepository>();
+        var city = new City() { Name = "Rybna", Country = "Poland", Population = 1000 };
         var target = new CityApiController(repo);
 
         //Act
@@ -66,33 +66,26 @@ public class ApiTest
     public void PostCity_ShouldReturnBadRequestResult_IfCityIsEmpty()
     {
         //Arrange
-        var cityStorage = new List<City>(); // "symulowana baza danych"
-        Mock<ICityRepository> mock = new Mock<ICityRepository> ();
-
-        mock.Setup(repo => repo.AddCity(It.IsAny<City>()))
-            .Callback<City>(c => cityStorage.Add(c));
-
-        mock.Setup(repo => repo.GetAllCities())
-            .Returns(() => cityStorage); // zwraca aktualną zawartość
-
-        var city = new City () { Name = "", Country = "Poland", Population = 800 };
-        var target = new CityApiController(mock.Object);
+        var repo = _provider.GetRequiredService<ICityRepository>();
+        var city = new City() { Name = "", Country = "Poland", Population = 800 };
+        var target = new CityApiController(repo);
+        var allCitiesCount = repo.GetAllCities().Count();
 
         //Act
         var result = target.PostCity(city);
-        var allCities=mock.Object.GetAllCities();
-        
+        var allCitiesCountAfter = repo.GetAllCities().Count();
+
         //Asset
         var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
         Assert.Equal(400, badRequestResult.StatusCode);
-        Assert.Empty(allCities);
+        Assert.Equal(allCitiesCount, allCitiesCountAfter);
     }
     [Fact]
     public void PostCity_ShouldReturnConflictResult_IfCityExist()
     {
         //Arrange
         var cityStorage = new List<City>(); // "symulowana baza danych"
-        Mock<ICityRepository> mock = new Mock<ICityRepository> ();
+        Mock<ICityRepository> mock = new Mock<ICityRepository>();
 
         mock.Setup(repo => repo.AddCity(It.IsAny<City>()))
             .Callback<City>(c => cityStorage.Add(c));
@@ -100,14 +93,32 @@ public class ApiTest
         mock.Setup(repo => repo.GetAllCities())
             .Returns(() => cityStorage); // zwraca aktualną zawartość
 
-        var cityOne = new City () { Name = "Stalowa Wola", Country = "Poland", Population = 800 };
-        var cityTwo = new City () { Name = "Stalowa Wola", Country = "Polska", Population = 500 };
+        mock.Setup(repo => repo.IfCityExistInRepo(It.IsAny<string>()))
+            .Returns((string name) =>
+            {
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    return 1;
+                }
+                var _existingcity = cityStorage.FirstOrDefault(c => c.Name == name);
+                if (_existingcity == null)
+                {
+                    return 2;
+                }
+                else
+                {
+                    return 3;
+                }
+            });
+
+        var cityOne = new City() { Name = "Stalowa Wola", Country = "Poland", Population = 800 };
+        var cityTwo = new City() { Name = "Stalowa Wola", Country = "Polska", Population = 500 };
         var target = new CityApiController(mock.Object);
 
         //Act
         target.PostCity(cityOne);
         var resultTwo = target.PostCity(cityTwo);
-        var allCities=mock.Object.GetAllCities();
+        var allCities = mock.Object.GetAllCities();
 
         //Asset
         var conflictResult = Assert.IsType<ConflictObjectResult>(resultTwo);
