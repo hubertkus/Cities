@@ -13,6 +13,11 @@ namespace Cities.Controllers.Api
         private ICityRepository _repository;
         public CityApiController(ICityRepository repository) => _repository = repository;
 
+        [HttpGet]
+        public IActionResult GetAllCities()
+        {
+         return Ok(_repository.Cities);
+        }
         [HttpGet("{city?}")]
         public IActionResult GetCity(string? city)
         {
