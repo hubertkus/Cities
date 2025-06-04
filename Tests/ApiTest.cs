@@ -126,4 +126,22 @@ public class ApiTest
         Assert.Equal(409, conflictResult.StatusCode);
         Assert.Single(allCities);
     }
+    [Fact]
+    public void PostCity_ShouldReturnOkResult_IfCityNotExist()
+    {
+        //Arrange
+        var repo = _provider.GetRequiredService<ICityRepository>();
+        var city = new City() { Name = "Seatle", Country = "Poland", Population = 800 };
+        var target = new CityApiController(repo);
+        var allCitiesCount = repo.GetAllCities().Count();
+
+        //Act
+        var result = target.PostCity(city);
+        var allCitiesCountAfter = repo.GetAllCities().Count();
+
+        //Asset
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.Equal(200, okResult.StatusCode);
+        Assert.Equal(allCitiesCount+1, allCitiesCountAfter);
+    }
 }
