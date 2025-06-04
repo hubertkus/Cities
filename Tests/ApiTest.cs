@@ -2,6 +2,7 @@ using Moq;
 using Xunit;
 using Cities.Controllers.Api;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Tests;
 
