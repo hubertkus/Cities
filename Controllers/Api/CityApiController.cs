@@ -16,7 +16,7 @@ namespace Cities.Controllers.Api
         [HttpGet("{city?}")]
         public IActionResult GetCity(string? city)
         {
-            int result_IfCityExistInRepo = IfCityExistInRepo(city);
+            int result_IfCityExistInRepo = _repository.IfCityExistInRepo(city);
 
             switch (result_IfCityExistInRepo)
             {
@@ -33,7 +33,7 @@ namespace Cities.Controllers.Api
         [HttpPost]
         public IActionResult PostCity([FromBody] City city)
         {
-            int result_IfCityExistInRepo = IfCityExistInRepo(city.Name);
+            int result_IfCityExistInRepo = _repository.IfCityExistInRepo(city.Name);
 
             switch (result_IfCityExistInRepo)
             {
@@ -46,22 +46,6 @@ namespace Cities.Controllers.Api
                     return Conflict($"Miasto: {city.Name} już istnieje");
                 default:
                     return BadRequest("Zasób nie znaleziony");
-            }
-        }
-        private int IfCityExistInRepo(string? city)
-        {
-            if (string.IsNullOrWhiteSpace(city))
-            {
-                return 1;
-            }
-            var _existingcity = _repository.Cities.FirstOrDefault(c => c.Name == city);
-            if (_existingcity == null)
-            {
-                return 2;
-            }
-            else
-            {
-                return 3;
             }
         }
     }

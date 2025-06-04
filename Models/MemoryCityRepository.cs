@@ -16,4 +16,20 @@ public class MemoryCityRepository : ICityRepository
     {
         return Cities;
     }
+    public int IfCityExistInRepo(string? city)
+    {
+        if (string.IsNullOrWhiteSpace(city))
+        {
+            return 1;
+        }
+        var _existingcity = Cities.FirstOrDefault(c => c.Name == city);
+        if (_existingcity == null)
+        {
+            return 2;
+        }
+        else
+        {
+            return 3;
+        }
+    }
 }
