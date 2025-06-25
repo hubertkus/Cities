@@ -15,5 +15,5 @@ jobs:
       uses: zaproxy/action-baseline@v0.9.0
       with:
         target: "https://cities.bieda.it/"
-        artifact_name: "zapscan"
+        artifact_name: "ZAP Scan Baseline Report"
         allow_issue_writing: true
