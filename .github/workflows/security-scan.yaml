@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [ main ]
 permissions:
-  issues: read
+  issues: write
 
 jobs:
   build:
@@ -15,3 +15,4 @@ jobs:
       uses: zaproxy/action-baseline@v0.10.0
       with:
         target: "https://cities.bieda.it/"
+        allow_issue_writing: true
