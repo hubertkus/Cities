@@ -12,8 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: OWASP ZAP Baseline Scan
-      uses: zaproxy/action-baseline@v0.9.0
+      uses: zaproxy/action-baseline@v0.10.0
       with:
         target: "https://cities.bieda.it/"
-        artifact_name: "ZAP Scan Baseline Report"
+        artifact_name: "zap-scan-report"
         allow_issue_writing: true
