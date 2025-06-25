@@ -5,6 +5,7 @@ on:
   pull_request:
     branches: [ main ]
 permissions:
+  contents: read
   issues: write
 
 jobs:
@@ -16,3 +17,5 @@ jobs:
       with:
         target: "https://cities.bieda.it/"
         allow_issue_writing: true
+        artifact_name: "zap-report"
+        cmd_options: "-a -J zap-report.json -w zap-report.html"
