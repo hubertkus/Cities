@@ -18,12 +18,13 @@ jobs:
         target: "https://cities.bieda.it/"
         allow_issue_writing: true
         artifact_name: "zap-report"
-        cmd_options: "-a -r ZAP-Report.html"
+        cmd_options: "-a -J zap-report.json -r"
     - name: List files in /zap/wrk/
       run: ls -la /zap/wrk/
     - name: Copy ZAP Report from container to workspace
       run: |
         cp /zap/wrk/ZAP-Report.html .
+        cp /zap/wrk/zap-report.json .
     - name: Upload ZAP HTML Report
       uses: actions/upload-artifact@v4
       with:
