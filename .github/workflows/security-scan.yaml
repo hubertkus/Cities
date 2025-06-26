@@ -19,3 +19,8 @@ jobs:
         allow_issue_writing: true
         artifact_name: "zap-report"
         cmd_options: "-a -J zap-report.json -w zap-report.html"
+    - name: Upload ZAP HTML Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: zap-report
+        path: zap-report.html
