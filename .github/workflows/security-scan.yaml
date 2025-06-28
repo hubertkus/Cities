@@ -19,12 +19,6 @@ jobs:
         allow_issue_writing: true
         artifact_name: "zap-report"
         cmd_options: "-a -J report_json.json -r report_html.html"
-    # - name: List files in /zap/wrk/
-    #   run: ls -la /zap/wrk/
-    # - name: Copy ZAP Report from container to workspace
-    #   run: |
-    #     cp /zap/wrk/report_html.html .
-    #     cp /zap/wrk/report_json.json .
     - name: Upload ZAP HTML Report
       uses: actions/upload-artifact@v4
       with:
