@@ -22,7 +22,7 @@ jobs:
     - name: Upload ZAP HTML Report
       uses: actions/upload-artifact@v4
       with:
-        name: zap-report
+        name: zap-report-${{ github.run_id }}
         path: |
           report_html.html
           report_json.json
