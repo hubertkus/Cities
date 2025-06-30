@@ -25,4 +25,11 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Append("Content-Security-Policy",
+        "default-src 'self'; script-src 'self'; object-src 'none'; frame-ancestors 'none';");
+    await next();
+});
+
 app.Run();
