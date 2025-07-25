@@ -27,8 +27,15 @@ app.MapControllerRoute(
 
 app.Use(async (context, next) =>
 {
-context.Response.Headers.Append("Content-Security-Policy",
-    "default-src 'self'; script-src 'self' https://widget.apresly.com https://app.apresly.com 'sha256-Q3kPPmbnIbVl3ScyrCibRG2XFX05HpG5Jqwdb1D8iGM='; object-src 'none'; frame-ancestors 'none'; form-action 'self';");
+    context.Response.Headers.Append("Content-Security-Policy",
+        "default-src 'self'; " +
+        "script-src 'self' https://app.apresly.com https://widget.apresly.com 'sha256-Q3kPPmbnIbVl3ScyrCibRG2XFX05HpG5Jqwdb1D8iGM='; " +
+        "connect-src 'self' https://app.apresly.com; " +
+        "img-src 'self' data:; " +
+        "style-src 'self' 'unsafe-inline'; " +
+        "object-src 'none'; " +
+        "form-action 'self'; " +
+        "frame-ancestors 'none';");
     await next();
 });
 

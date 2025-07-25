@@ -16,7 +16,7 @@ namespace Cities.Controllers.Api
         [HttpGet]
         public IActionResult GetAll()
         {
-         return Ok(_repository.Cities);
+            return Ok(_repository.Cities);
         }
         [HttpGet("{city?}")]
         public IActionResult GetCity(string? city)

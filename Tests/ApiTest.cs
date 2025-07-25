@@ -142,6 +142,6 @@ public class ApiTest
         //Asset
         var okResult = Assert.IsType<OkObjectResult>(result);
         Assert.Equal(200, okResult.StatusCode);
-        Assert.Equal(allCitiesCount+1, allCitiesCountAfter);
+        Assert.Equal(allCitiesCount + 1, allCitiesCountAfter);
     }
 }
