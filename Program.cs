@@ -28,7 +28,7 @@ app.MapControllerRoute(
 app.Use(async (context, next) =>
 {
     context.Response.Headers.Append("Content-Security-Policy",
-        "default-src 'self'; script-src 'self' https://widget.apresly.com; object-src 'none'; frame-ancestors 'none'; form-action 'self';");
+        "default-src 'self'; script-src 'self' https://widget.apresly.com 'sha256-WepKAdJ48oKvS9Hsb9pKqgAHh6Qb1IMAw6S4GLx7W2U='; object-src 'none'; frame-ancestors 'none'; form-action 'self';");
     await next();
 });
 
