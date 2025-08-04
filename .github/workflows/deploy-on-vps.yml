@@ -1,0 +1,94 @@
+---
+ name: Deploy on VPS
+
+ on:
+   workflow_run:
+     workflows: ["Build Image"]  # Workflow, od którego zależy ten workflow
+     types:
+       - completed  # Będzie uruchomiony, gdy workflow 'Build Image' zakończy się
+   workflow_dispatch:
+
+ env:
+   USER_PATH: "/home/hubert/docker"
+   REGISTRY: ghcr.io
+   REPOSITORY: ${{ github.repository }}
+   IMAGE_URL: $REGISTRY/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]'):latest
+
+ jobs:
+   check:
+     name: Prerequisites Check
+     runs-on: ubuntu-latest
+     outputs:
+       has_gh_secrets: ${{ steps.check-gh-key-secret.outputs.declared }}
+     steps:
+       - name: Check for GitHub Secret availability
+         id: check-gh-key-secret
+         shell: bash
+         run: |
+           if [[ ! -z  "${{ secrets.VPS_PASSWORD }}" ]] && [[ ! -z  "${{ secrets.VPS_USERNAME }}" ]] && [[ ! -z  "${{ secrets.VPS_HOST }}" ]]; then
+             echo "All secrets are declared."
+             echo "declared=true" >> $GITHUB_OUTPUT;
+           else
+             echo "At least one secret is missing: VPS_PASSWORD, VPS_USERNAME, VPS_HOST."
+             exit 1
+           fi
+
+   prepare-environment:
+     name: Prepare environment
+     runs-on: ubuntu-latest
+     needs: [check]
+     if: |
+       needs.check.outputs.has_gh_secrets
+     steps:
+
+     - name: Checkout code
+       uses: actions/checkout@v3
+       with:
+         ref: master
+         fetch-depth: 0
+         clean: true
+
+     - name: copy file via ssh password
+       uses: appleboy/scp-action@v0.1.4
+       with:
+         host: ${{ secrets.VPS_HOST }}
+         username: ${{ secrets.VPS_USERNAME }}
+         password: ${{ secrets.VPS_PASSWORD }}
+         port: 10109
+         source: "docker-compose.yml"
+         # path to home directory of the user
+         target: ${{ env.USER_PATH }}
+         # keep updating the docker-compose.yml file
+         overwrite: true
+
+   deploy-docker:
+     name: Deploy image
+     runs-on: ubuntu-latest
+     needs: [prepare-environment]
+     steps:
+       - name: Deploy on VPS
+         uses: appleboy/ssh-action@master
+         with:
+           host: ${{ secrets.VPS_HOST }}
+           username: ${{ secrets.VPS_USERNAME }}
+           password: ${{ secrets.VPS_PASSWORD }}
+           port: 10109
+           script: |
+             set -e
+
+             echo "Logging in to GHCR on VPS..."
+             echo "${{ secrets.GH_PAT }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+
+             echo "Pulling image on VPS..."
+             docker pull ${{ env.IMAGE_URL }}
+
+             echo "Checking if docker-compose.yml exists..."
+             if [ -f "$USER_PATH/docker-compose.yml" ]; then
+               echo "docker-compose.yml found, deploying container..."
+               cd $USER_PATH
+               echo "IMAGE_URL=$IMAGE_URL" > $USER_PATH/.env
+               docker compose up -d
+             else
+               echo "docker-compose.yml not found! Deployment aborted."
+               exit 1
+             fi
