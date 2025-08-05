@@ -12,7 +12,6 @@
    USER_PATH: "/home/hubert/docker"
    REGISTRY: ghcr.io
    REPOSITORY: ${{ github.repository }}
-   IMAGE_URL: $REGISTRY/$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]'):latest
 
  jobs:
    check:
@@ -67,7 +66,7 @@
      needs: [prepare-environment]
      steps:
        - name: Deploy on VPS
-         uses: appleboy/ssh-action@master
+         uses: appleboy/ssh-action@v1.2.2
          with:
            host: ${{ secrets.VPS_HOST }}
            username: ${{ secrets.VPS_USERNAME }}
@@ -76,11 +75,15 @@
            script: |
              set -e
 
+             USER_PATH="/home/hubert/docker"
+             REPO_LC=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+             IMAGE_URL="ghcr.io/${REPO_LC}:latest"
+
              echo "Logging in to GHCR on VPS..."
              echo "${{ secrets.GH_PAT }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
              echo "Pulling image on VPS..."
-             docker pull ${{ env.IMAGE_URL }}
+             docker pull $IMAGE_URL
 
              echo "Checking if docker-compose.yml exists..."
              if [ -f "$USER_PATH/docker-compose.yml" ]; then
