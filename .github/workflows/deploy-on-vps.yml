@@ -85,7 +85,7 @@
                echo "docker-compose.yml found, deploying container..."
                cd $USER_PATH
                echo "IMAGE_URL=$IMAGE_URL" > $USER_PATH/.env
-               docker compose up -d
+               docker-compose up -d
              else
                echo "docker-compose.yml not found! Deployment aborted."
                exit 1
