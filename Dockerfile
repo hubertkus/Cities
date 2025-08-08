@@ -12,4 +12,4 @@ RUN mkdir /app
 COPY --from=build /out /app
 ENV ASPNETCORE_URLS=http://*:80
 WORKDIR /app
-CMD Cities
+CMD ./Cities
