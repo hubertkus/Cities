@@ -53,7 +53,7 @@ jobs:
           type=raw,value=latest
           type=sha
           type=sha,format=long
-          type=semver,pattern={{version}},value=${{ inputs.release_tag }}
+          type=semver,pattern={{version}},value=${{ inputs.release_tag || 'latest' }}
 
     - name: Build Docker image
       uses: docker/build-push-action@v4
@@ -96,7 +96,7 @@ jobs:
       with:
         image-ref: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
         format: spdx-json
-        output: sbom-${{ inputs.release_tag }}.json
+        output: sbom-${{ inputs.release_tag || 'latest' }}.json
 
     # Skanowanie SBOM
     - name: Install Grype
@@ -105,17 +105,17 @@ jobs:
 
     - name: Scan SBOM with Grype
       run: |
-        grype sbom-${{ inputs.release_tag }}.json -o sarif > grype-results-${{ inputs.release_tag }}.sarif || true
+        grype sbom-${{ inputs.release_tag || 'latest' }}.json -o sarif > grype-results-${{ inputs.release_tag || 'latest' }}.sarif || true
 
     # Wysłanie SBOM i Grype do GitHub Release
     # - name: Upload SBOM to GitHub Release
     #   uses: softprops/action-gh-release@v1
     #   with:
-    #     tag_name: ${{ inputs.release_tag }}
-    #     name: Sbom ${{ inputs.release_tag }}
+    #     tag_name: ${{ inputs.release_tag || 'latest' }}
+    #     name: Sbom ${{ inputs.release_tag || 'latest' }}
     #     files: |
-    #       sbom-${{ inputs.release_tag }}.json
-    #       grype-results-${{ inputs.release_tag }}.sarif
+    #       sbom-${{ inputs.release_tag || 'latest' }}.json
+    #       grype-results-${{ inputs.release_tag || 'latest' }}.sarif
     #   env:
     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
