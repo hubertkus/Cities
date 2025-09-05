@@ -32,7 +32,7 @@ app.Use(async (context, next) =>
         "script-src 'self' https://app.apresly.com https://widget.apresly.com 'sha256-Q3kPPmbnIbVl3ScyrCibRG2XFX05HpG5Jqwdb1D8iGM='; " +
         "connect-src 'self' https://app.apresly.com; " +
         "img-src 'self' data: https://app.apresly.com; " +
-        "style-src 'self' 'unsafe-inline'; " +
+        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " +
         "font-src 'self' https://cdn.jsdelivr.net; " +
         "object-src 'none'; " +
         "form-action 'self'; " +
