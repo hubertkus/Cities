@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cities
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cities
+  template:
+    metadata:
+      labels:
+        app: cities
+    spec:
+      containers:
+      - name: cities
+        image: cities:1.0
+        ports:
+        - containerPort: 80
